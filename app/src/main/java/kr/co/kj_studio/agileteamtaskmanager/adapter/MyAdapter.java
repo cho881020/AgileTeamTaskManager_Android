@@ -1,26 +1,23 @@
-package kr.co.kj_studio.agileteamtaskmanager;
+package kr.co.kj_studio.agileteamtaskmanager.adapter;
 
 import android.content.Context;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
-import android.widget.HorizontalScrollView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import kr.co.kj_studio.agileteamtaskmanager.R;
+import kr.co.kj_studio.agileteamtaskmanager.view.DoingListItem;
 
 /**
  * Created by KJ_Studio on 2015-12-07.
  */
 public class MyAdapter extends ArrayAdapter<String> {
     Context mContext;
+
     public MyAdapter(Context context, ArrayList<String> list) {
-        super(context, R.layout.my_list_item, R.id.contentTxt, list);
+        super(context, R.layout.doing_list_item, R.id.contentTxt, list);
 
         mContext = context;
 
@@ -28,7 +25,11 @@ public class MyAdapter extends ArrayAdapter<String> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View row = new MyListItem(mContext);
+        View row = convertView;
+        if (row== null) {
+            row = new DoingListItem(mContext);
+        }
+
         return row;
     }
 

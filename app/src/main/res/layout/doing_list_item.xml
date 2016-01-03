@@ -12,23 +12,29 @@
         <TextView
             android:id="@+id/emptyView1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="#FDD" />
 
         <LinearLayout
             android:id="@+id/contentLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <TextView
                 android:id="@+id/contentTxt"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Tasks"/>
+                android:background="#DFD"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:text="Tasks" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/emptyView2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="#DDF" />
 
     </android.support.v4.view.ViewPager>
 </LinearLayout>

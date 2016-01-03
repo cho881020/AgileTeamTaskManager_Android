@@ -1,20 +1,19 @@
-package kr.co.kj_studio.agileteamtaskmanager;
+package kr.co.kj_studio.agileteamtaskmanager.view;
 
-import android.app.LauncherActivity;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import kr.co.kj_studio.agileteamtaskmanager.R;
 
 /**
  * Created by KJ_Studio on 2015-12-07.
  */
-public class MyListItem  extends LinearLayout {
+public class DoingListItem extends LinearLayout {
 
     ViewPager myViewPager;
     TextView emptyView1;
@@ -22,23 +21,23 @@ public class MyListItem  extends LinearLayout {
     LinearLayout contentLayout;
 
 
-    public MyListItem(Context context) {
+    public DoingListItem(Context context) {
         super(context);
         init();
     }
 
-    public MyListItem(Context context, AttributeSet attrs) {
+    public DoingListItem(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public MyListItem(Context context, AttributeSet attrs, int defStyle) {
+    public DoingListItem(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }
 
     private void init() {
-        inflate(getContext(), R.layout.my_list_item, this);
+        inflate(getContext(), R.layout.doing_list_item, this);
 
         myViewPager = (ViewPager) findViewById(R.id.myViewPager);
         emptyView1 = (TextView) findViewById(R.id.emptyView1);

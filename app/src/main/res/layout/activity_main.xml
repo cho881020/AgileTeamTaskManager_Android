@@ -1,14 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="kr.co.kj_studio.agileteamtaskmanager.MainActivity">
 
-    <ListView
-        android:id="@+id/myListView"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <FrameLayout
+            android:id="@+id/todoLayout"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TO DO"/>
+
+                <TextView
+                    android:background="@color/todoColor"
+                    android:id="@+id/todoCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="1"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/todoIndicator"
+                android:background="@color/todoColor"
+                android:layout_gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="6dp" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/doingLayout"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DOING"/>
+
+                <TextView
+                    android:background="@color/doingColor"
+                    android:id="@+id/doingCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="1"/>
+            </LinearLayout>
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/doingIndicator"
+                android:background="@color/doingColor"
+                android:layout_gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="6dp" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/doneLayout"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DONE"/>
+
+                <TextView
+                    android:background="@color/doneColor"
+                    android:id="@+id/doneCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="1"/>
+            </LinearLayout>
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/doneIndicator"
+                android:background="@color/doneColor"
+                android:layout_gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="6dp" />
+
+        </FrameLayout>
+    </LinearLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </ListView>
-</RelativeLayout>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/myViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@+id/todoListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <ListView
+                android:id="@+id/doingListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <ListView
+                android:id="@+id/doneListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </android.support.v4.view.ViewPager>
+
+        <ImageButton
+            android:id="@+id/addBtn"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="#00000000"
+            android:padding="5dp"
+            android:layout_marginBottom="25dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="bottom|right"
+            android:scaleType="fitXY"
+            android:src="@drawable/plus_red_btn_selector" />
+    </FrameLayout>
+
+
+</LinearLayout>

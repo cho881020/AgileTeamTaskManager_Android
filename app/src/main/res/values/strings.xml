@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">AgileTeamTaskManager</string>
+    <string name="app_name">Share-TDD</string>
+    <string name="facebook_app_id">1508710069457665</string>
 </resources>

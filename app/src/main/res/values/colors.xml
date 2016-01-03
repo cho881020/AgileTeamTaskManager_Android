@@ -3,4 +3,25 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="todoColor">#EF846C</color>
+    <color name="doingColor">#F7D14E</color>
+    <color name="doneColor">#50D4C1</color>
+
+
+    <color name="color_primary">#dd3333</color>
+    <color name="color_primary_Dark">#440000</color>
+    <color name="color_primary_Soft">#dd7777</color>
+    <color name="color_Accent">#0099ee</color>
+    <color name="color_Accent_inverse">#999999</color>
+    <color name="color_background_white">#fff</color>
+    <color name="color_background_gray">#eeeeee</color>
+    <color name="color_background_invisible">#0000</color>
+    <color name="color_background_translucent">#5000</color>
+    <color name="color_text_primary">#000</color>
+    <color name="color_text_primary_inverse">#fff</color>
+    <color name="color_text_secondary">#ffaaaa</color>
+    <color name="color_text_secondary_inverse">#ff3333</color>
+    <color name="main_concept_color">#F18236</color>
+
 </resources>
