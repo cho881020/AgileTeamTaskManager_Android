@@ -4,11 +4,17 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,20 +28,21 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import kr.co.kj_studio.agileteamtaskmanager.adapter.DoingAdapter;
-import kr.co.kj_studio.agileteamtaskmanager.adapter.DoneAdapter;
-import kr.co.kj_studio.agileteamtaskmanager.adapter.MyAdapter;
 import kr.co.kj_studio.agileteamtaskmanager.datas.ProjectData;
 import kr.co.kj_studio.agileteamtaskmanager.datas.TaskData;
 import kr.co.kj_studio.agileteamtaskmanager.util.ContextUtil;
 import kr.co.kj_studio.agileteamtaskmanager.util.ServerUtil;
+import kr.co.kj_studio.agileteamtaskmanager.view.DoingListItemView;
+import kr.co.kj_studio.agileteamtaskmanager.view.DoneListItemView;
 import kr.co.kj_studio.agileteamtaskmanager.view.TodoListItemView;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends AppCompatActivity {
 
 
     DisplayImageOptions options = new DisplayImageOptions.Builder().cacheOnDisk(true).cacheInMemory(true).build();
 
+    public ImageButton toggleBtn;
+    public TextView mTitleTextView;
     private ListView todoListView;
     private ListView doingListView;
     private ListView doneListView;
@@ -55,13 +62,11 @@ public class MainActivity extends BaseActivity {
     ArrayList<TaskData> doneArrayList = new ArrayList<>();
 
 
-    TodoAdapter todoAdapter;
-    DoingAdapter doingAdapter;
-    DoneAdapter doneAdapter;
-
-
-
     ProjectData mProjectData;
+    private Toolbar myawesometoolbar;
+    private android.widget.ImageButton addTaskBtn;
+    private ListView lvactivitymainnavlist;
+    private android.widget.LinearLayout drawLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +75,7 @@ public class MainActivity extends BaseActivity {
 
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(MainActivity.this).build();
         ImageLoader.getInstance().init(config);
-
+        setCustomActionbar();
         bindViews();
         setupEvents();
         setValues();
@@ -110,38 +115,55 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    public void setCustomActionbar() {
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar mActionBar = getSupportActionBar();
+        mActionBar.setDisplayShowHomeEnabled(false);
+        mActionBar.setDisplayHomeAsUpEnabled(false);
+        mActionBar.setDisplayShowTitleEnabled(false);
+        mActionBar.setDisplayShowCustomEnabled(true);
+        LayoutInflater mInflater = LayoutInflater.from(this);
+
+        View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
+
+
+        mActionBar.setCustomView(mCustomView);
+        mActionBar.setDisplayShowCustomEnabled(true);
+
+        Toolbar parent = (Toolbar) mCustomView.getParent();
+        parent.setContentInsetsAbsolute(0, 0);
+    }
     private void displayListViews() {
 
-        todoCount.setText(todoArrayList.size()+"");
+        todoCount.setText(todoArrayList.size() + "");
+        doingCount.setText(doingArrayList.size() + "");
+        doneCount.setText(doneArrayList.size() + "");
 
         todoListView.setAdapter(new TodoAdapter(MainActivity.this, todoArrayList));
-        doingListView.setAdapter(new MyAdapter(MainActivity.this, new ArrayList<String>()));
-        doneListView.setAdapter(new MyAdapter(MainActivity.this, new ArrayList<String>()));
+        doingListView.setAdapter(new DoingAdapter(MainActivity.this, doingArrayList));
+        doneListView.setAdapter(new DoneAdapter(MainActivity.this, doneArrayList));
     }
 
     void setIndicators(int index) {
-        if (index == 0 ) {
+        if (index == 0) {
             todoIndicator.setVisibility(View.VISIBLE);
             doingIndicator.setVisibility(View.GONE);
             doneIndicator.setVisibility(View.GONE);
-        }
-        else if (index == 1) {
+        } else if (index == 1) {
 
             todoIndicator.setVisibility(View.GONE);
             doingIndicator.setVisibility(View.VISIBLE);
             doneIndicator.setVisibility(View.GONE);
-        }
-        else if (index == 2) {
+        } else if (index == 2) {
 
             todoIndicator.setVisibility(View.GONE);
             doingIndicator.setVisibility(View.GONE);
             doneIndicator.setVisibility(View.VISIBLE);
         }
     }
-
-    @Override
     public void setupEvents() {
-        super.setupEvents();
         todoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -195,10 +217,18 @@ public class MainActivity extends BaseActivity {
         myViewPager.setCurrentItem(0);
     }
 
-    @Override
-    public void bindViews() {
-        super.bindViews();
 
+    public void bindViews() {
+
+        toggleBtn = (ImageButton) getSupportActionBar().getCustomView().findViewById(R.id.toggleBtn);
+        mTitleTextView = (TextView) getSupportActionBar().getCustomView().findViewById(R.id.titleTxt);
+        this.drawLayout = (LinearLayout) findViewById(R.id.drawLayout);
+        this.lvactivitymainnavlist = (ListView) findViewById(R.id.lv_activity_main_nav_list);
+        this.addTaskBtn = (ImageButton) findViewById(R.id.addTaskBtn);
+        this.myViewPager = (ViewPager) findViewById(R.id.myViewPager);
+        this.doneListView = (ListView) findViewById(R.id.doneListView);
+        this.doingListView = (ListView) findViewById(R.id.doingListView);
+        this.todoListView = (ListView) findViewById(R.id.todoListView);
         this.doneLayout = (FrameLayout) findViewById(R.id.doneLayout);
         this.doneIndicator = (TextView) findViewById(R.id.doneIndicator);
         this.doneCount = (TextView) findViewById(R.id.doneCount);
@@ -208,10 +238,7 @@ public class MainActivity extends BaseActivity {
         this.todoLayout = (FrameLayout) findViewById(R.id.todoLayout);
         this.todoIndicator = (TextView) findViewById(R.id.todoIndicator);
         this.todoCount = (TextView) findViewById(R.id.todoCount);
-        this.myViewPager = (ViewPager) findViewById(R.id.myViewPager);
-        this.doneListView = (ListView) findViewById(R.id.doneListView);
-        this.doingListView = (ListView) findViewById(R.id.doingListView);
-        this.todoListView = (ListView) findViewById(R.id.todoListView);
+        this.myawesometoolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
     }
 
     class WizardPagerAdapter extends PagerAdapter {
@@ -260,7 +287,7 @@ public class MainActivity extends BaseActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             View row = convertView;
 
-            if (row== null) {
+            if (row == null) {
                 row = new TodoListItemView(mContext);
             }
 
@@ -277,8 +304,7 @@ public class MainActivity extends BaseActivity {
 
             if (ContextUtil.getUSER_ID(MainActivity.this) != taskData.user_id) {
                 mItem.myViewPager.setPagingEnabled(false);
-            }
-            else {
+            } else {
                 mItem.myViewPager.setPagingEnabled(true);
             }
 
@@ -291,7 +317,211 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void onPageSelected(int position) {
                     if (position == 0) {
-                        ServerUtil.to_left(MainActivity.this, mProjectData.id + "", taskData.user_content, taskData.id+"", new ServerUtil.JsonResponseHandler() {
+                        ServerUtil.to_left(MainActivity.this, mProjectData.id + "", taskData.user_content, taskData.id + "", new ServerUtil.JsonResponseHandler() {
+                            @Override
+                            public void onResponse(JSONObject json) {
+                                todoArrayList.clear();
+                                doingArrayList.clear();
+                                doneArrayList.clear();
+                                try {
+                                    JSONArray content = json.getJSONArray("content");
+                                    for (int i = 0; i < content.length(); i++) {
+                                        TaskData taskData = TaskData.getTaskDataFromJson(content.getJSONObject(i));
+                                        if (taskData.status.equals("to_do")) {
+                                            todoArrayList.add(taskData);
+                                        } else if (taskData.status.equals("doing")) {
+                                            doingArrayList.add(taskData);
+                                        } else {
+                                            doneArrayList.add(taskData);
+                                        }
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                Log.d("json", json.toString());
+
+                                displayListViews();
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+
+
+            return row;
+        }
+
+    }
+
+    public class DoneAdapter extends ArrayAdapter<TaskData> {
+        Context mContext;
+        ArrayList<TaskData> mList;
+
+
+        public DoneAdapter(Context context, ArrayList<TaskData> list) {
+            super(context, R.layout.doing_list_item, R.id.contentTxt, list);
+
+            mContext = context;
+            mList = list;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View row = convertView;
+
+            if (row == null) {
+                row = new DoneListItemView(mContext);
+            }
+
+            final TaskData taskData = mList.get(position);
+
+            DoneListItemView mItem = (DoneListItemView) row;
+            mItem.contentTxt.setText(taskData.user_content);
+
+
+            String imageURL = "https://graph.facebook.com/" + taskData.uid + "/picture";
+            ImageLoader.getInstance().displayImage(imageURL, mItem.profileImage, options);
+
+            mItem.userNameTxt.setText(taskData.username);
+
+            if (ContextUtil.getUSER_ID(MainActivity.this) != taskData.user_id) {
+                mItem.myViewPager.setPagingEnabled(false);
+            } else {
+                mItem.myViewPager.setPagingEnabled(true);
+            }
+
+            mItem.myViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    if (position == 1) {
+                        ServerUtil.to_right(MainActivity.this, mProjectData.id + "", taskData.user_content, taskData.id + "", new ServerUtil.JsonResponseHandler() {
+                            @Override
+                            public void onResponse(JSONObject json) {
+                                todoArrayList.clear();
+                                doingArrayList.clear();
+                                doneArrayList.clear();
+                                try {
+                                    JSONArray content = json.getJSONArray("content");
+                                    for (int i = 0; i < content.length(); i++) {
+                                        TaskData taskData = TaskData.getTaskDataFromJson(content.getJSONObject(i));
+                                        if (taskData.status.equals("to_do")) {
+                                            todoArrayList.add(taskData);
+                                        } else if (taskData.status.equals("doing")) {
+                                            doingArrayList.add(taskData);
+                                        } else {
+                                            doneArrayList.add(taskData);
+                                        }
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                Log.d("json", json.toString());
+
+                                displayListViews();
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+
+
+            return row;
+        }
+
+    }
+
+    public class DoingAdapter extends ArrayAdapter<TaskData> {
+        Context mContext;
+        ArrayList<TaskData> mList;
+
+
+        public DoingAdapter(Context context, ArrayList<TaskData> list) {
+            super(context, R.layout.doing_list_item, R.id.contentTxt, list);
+
+            mContext = context;
+            mList = list;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View row = convertView;
+
+            if (row == null) {
+                row = new DoingListItemView(mContext);
+            }
+
+            final TaskData taskData = mList.get(position);
+
+            DoingListItemView mItem = (DoingListItemView) row;
+            mItem.contentTxt.setText(taskData.user_content);
+
+
+            String imageURL = "https://graph.facebook.com/" + taskData.uid + "/picture";
+            ImageLoader.getInstance().displayImage(imageURL, mItem.profileImage, options);
+
+            mItem.userNameTxt.setText(taskData.username);
+
+            if (ContextUtil.getUSER_ID(MainActivity.this) != taskData.user_id) {
+                mItem.myViewPager.setPagingEnabled(false);
+            } else {
+                mItem.myViewPager.setPagingEnabled(true);
+            }
+
+            mItem.myViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    if (position == 0) {
+                        ServerUtil.to_left(MainActivity.this, mProjectData.id + "", taskData.user_content, taskData.id + "", new ServerUtil.JsonResponseHandler() {
+                            @Override
+                            public void onResponse(JSONObject json) {
+                                todoArrayList.clear();
+                                doingArrayList.clear();
+                                doneArrayList.clear();
+                                try {
+                                    JSONArray content = json.getJSONArray("content");
+                                    for (int i = 0; i < content.length(); i++) {
+                                        TaskData taskData = TaskData.getTaskDataFromJson(content.getJSONObject(i));
+                                        if (taskData.status.equals("to_do")) {
+                                            todoArrayList.add(taskData);
+                                        } else if (taskData.status.equals("doing")) {
+                                            doingArrayList.add(taskData);
+                                        } else {
+                                            doneArrayList.add(taskData);
+                                        }
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                Log.d("json", json.toString());
+
+                                displayListViews();
+                            }
+                        });
+                    } else if (position == 2) {
+                        ServerUtil.to_right(MainActivity.this, mProjectData.id + "", taskData.user_content, taskData.id + "", new ServerUtil.JsonResponseHandler() {
                             @Override
                             public void onResponse(JSONObject json) {
                                 todoArrayList.clear();

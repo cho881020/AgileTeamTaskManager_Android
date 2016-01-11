@@ -196,4 +196,48 @@ public class ServerUtil {
 
 		});
 	}
+
+
+	public static void to_right(final Context context, final String team_id, String user_cont, String cont_id, final JsonResponseHandler handler) {
+		String url = BASE_URL+"home/to_right";
+		//		String registrationId = ContextUtil.getRegistrationId(context);
+
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("team_id", team_id);
+		data.put("user_cont", user_cont);
+		data.put("cont_id", cont_id);
+
+		AsyncHttpRequest.post(context, url,  data, false, new AsyncHttpRequest.HttpResponseHandler() {
+
+			@Override
+			public boolean onPrepare() {
+				return true;
+			}
+
+			@Override
+			public void onResponse(String response) {
+//				Log.v("CHO", response);
+				System.out.println(response);
+				try {
+
+					JSONObject json = new JSONObject(response);
+
+					if (handler != null)
+						handler.onResponse(json);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+			@Override
+			public void onFinish() {
+
+			}
+
+			@Override
+			public void onCancelled() {
+
+			}
+
+		});
+	}
 }

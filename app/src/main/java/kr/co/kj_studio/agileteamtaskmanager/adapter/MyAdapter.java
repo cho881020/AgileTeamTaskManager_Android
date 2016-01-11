@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import java.util.ArrayList;
 
 import kr.co.kj_studio.agileteamtaskmanager.R;
-import kr.co.kj_studio.agileteamtaskmanager.view.DoingListItem;
+import kr.co.kj_studio.agileteamtaskmanager.view.DoingListItemView;
 
 /**
  * Created by KJ_Studio on 2015-12-07.
@@ -27,7 +27,7 @@ public class MyAdapter extends ArrayAdapter<String> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
         if (row== null) {
-            row = new DoingListItem(mContext);
+            row = new DoingListItemView(mContext);
         }
 
         return row;

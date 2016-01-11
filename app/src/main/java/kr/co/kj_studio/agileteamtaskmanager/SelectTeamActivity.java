@@ -2,6 +2,9 @@ package kr.co.kj_studio.agileteamtaskmanager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -33,9 +36,10 @@ public class SelectTeamActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_team);
+        setCustomActionbar();
         bindViews();
 
-        mTitleTextView.setText("프로젝트 목록");
+        mTitleTextView.setText("내프로젝트 목록");
 
         this.myTeamListView = (ListView) findViewById(R.id.myTeamListView);
         totalAdapter  = new ProjectAdapter(SelectTeamActivity.this, myTotalTeam);
@@ -80,6 +84,8 @@ public class SelectTeamActivity extends BaseActivity {
             }
         });
     }
+
+
 
     private void displayListView() {
 
