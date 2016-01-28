@@ -1,6 +1,7 @@
 package kr.co.kj_studio.agileteamtaskmanager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -28,12 +29,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import kr.co.kj_studio.agileteamtaskmanager.adapter.ProjectAdapter;
 import kr.co.kj_studio.agileteamtaskmanager.datas.ProjectData;
 import kr.co.kj_studio.agileteamtaskmanager.datas.TaskData;
 import kr.co.kj_studio.agileteamtaskmanager.util.ContextUtil;
 import kr.co.kj_studio.agileteamtaskmanager.util.ServerUtil;
 import kr.co.kj_studio.agileteamtaskmanager.view.DoingListItemView;
 import kr.co.kj_studio.agileteamtaskmanager.view.DoneListItemView;
+import kr.co.kj_studio.agileteamtaskmanager.view.PinnedSectionListView;
 import kr.co.kj_studio.agileteamtaskmanager.view.TodoListItemView;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,9 +46,9 @@ public class MainActivity extends AppCompatActivity {
 
     public ImageButton toggleBtn;
     public TextView mTitleTextView;
-    private ListView todoListView;
-    private ListView doingListView;
-    private ListView doneListView;
+    private PinnedSectionListView todoListView;
+    private PinnedSectionListView doingListView;
+    private PinnedSectionListView doneListView;
     private android.support.v4.view.ViewPager myViewPager;
     private android.widget.TextView todoCount;
     private android.widget.TextView todoIndicator;
@@ -61,12 +64,18 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<TaskData> doingArrayList = new ArrayList<>();
     ArrayList<TaskData> doneArrayList = new ArrayList<>();
 
+    ProjectAdapter totalAdapter;
 
     ProjectData mProjectData;
     private Toolbar myawesometoolbar;
     private android.widget.ImageButton addTaskBtn;
-    private ListView lvactivitymainnavlist;
+    private ListView myTeamListView;
     private android.widget.LinearLayout drawLayout;
+
+
+    ArrayList<ProjectData> myTeam = new ArrayList<>();
+    ArrayList<ProjectData> myBelongTeam = new ArrayList<>();
+    ArrayList<ProjectData> myTotalTeam = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +89,14 @@ public class MainActivity extends AppCompatActivity {
         setupEvents();
         setValues();
 
-        getContentsFromServer();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getContentsFromServer();
     }
 
     void getContentsFromServer() {
@@ -113,6 +128,48 @@ public class MainActivity extends AppCompatActivity {
                 displayListViews();
             }
         });
+
+        ServerUtil.select_team(MainActivity.this, ContextUtil.getUSER_ID(MainActivity.this) + "", new ServerUtil.JsonResponseHandler() {
+            @Override
+            public void onResponse(JSONObject json) {
+
+                myTeam.clear();
+                myBelongTeam.clear();
+                myTotalTeam.clear();
+                try {
+                    JSONArray jangteam = json.getJSONArray("jangteam");
+                    for (int i = 0; i < jangteam.length(); i++) {
+                        myTeam.add(ProjectData.getProjectDataFromJson(jangteam.getJSONObject(i)));
+                        myTotalTeam.add(ProjectData.getProjectDataFromJson(jangteam.getJSONObject(i)));
+                    }
+
+                    JSONArray sokteam = json.getJSONArray("sokteam");
+
+                    for (int i = 0; i < sokteam.length(); i++) {
+                        myBelongTeam.add(ProjectData.getProjectDataFromJson(sokteam.getJSONObject(i)));
+                        myTotalTeam.add(ProjectData.getProjectDataFromJson(sokteam.getJSONObject(i)));
+
+                    }
+
+                    displayListView();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+
+
+    private void displayListView() {
+
+//        totalAdapter.clear();
+//        totalAdapter.addAll(myTotalTeam);
+//        totalAdapter.notifyDataSetChanged();
+
+
+        totalAdapter  = new ProjectAdapter(MainActivity.this, myTotalTeam);
+        myTeamListView.setAdapter(totalAdapter);
     }
 
     public void setCustomActionbar() {
@@ -164,6 +221,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void setupEvents() {
+
+        addTaskBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mIntent = new Intent(MainActivity.this, EditTaskActivity.class);
+                mIntent.putExtra("teamId", mProjectData.id);
+                startActivity(mIntent);
+            }
+        });
+
         todoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -223,12 +290,12 @@ public class MainActivity extends AppCompatActivity {
         toggleBtn = (ImageButton) getSupportActionBar().getCustomView().findViewById(R.id.toggleBtn);
         mTitleTextView = (TextView) getSupportActionBar().getCustomView().findViewById(R.id.titleTxt);
         this.drawLayout = (LinearLayout) findViewById(R.id.drawLayout);
-        this.lvactivitymainnavlist = (ListView) findViewById(R.id.lv_activity_main_nav_list);
+        this.myTeamListView = (ListView) findViewById(R.id.myTeamListView);
         this.addTaskBtn = (ImageButton) findViewById(R.id.addTaskBtn);
         this.myViewPager = (ViewPager) findViewById(R.id.myViewPager);
-        this.doneListView = (ListView) findViewById(R.id.doneListView);
-        this.doingListView = (ListView) findViewById(R.id.doingListView);
-        this.todoListView = (ListView) findViewById(R.id.todoListView);
+        this.doneListView = (PinnedSectionListView) findViewById(R.id.doneListView);
+        this.doingListView = (PinnedSectionListView) findViewById(R.id.doingListView);
+        this.todoListView = (PinnedSectionListView) findViewById(R.id.todoListView);
         this.doneLayout = (FrameLayout) findViewById(R.id.doneLayout);
         this.doneIndicator = (TextView) findViewById(R.id.doneIndicator);
         this.doneCount = (TextView) findViewById(R.id.doneCount);

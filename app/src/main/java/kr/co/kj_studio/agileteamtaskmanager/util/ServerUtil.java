@@ -240,4 +240,47 @@ public class ServerUtil {
 
 		});
 	}
+
+	public static void new_cont(final Context context, String user_id,  final String team_id, String user_content, final JsonResponseHandler handler) {
+		String url = BASE_URL+"mob/new_cont";
+		//		String registrationId = ContextUtil.getRegistrationId(context);
+
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("team_id", team_id);
+		data.put("user_content", user_content);
+		data.put("user_id", user_id);
+
+		AsyncHttpRequest.post(context, url,  data, false, new AsyncHttpRequest.HttpResponseHandler() {
+
+			@Override
+			public boolean onPrepare() {
+				return true;
+			}
+
+			@Override
+			public void onResponse(String response) {
+//				Log.v("CHO", response);
+				System.out.println(response);
+				try {
+
+					JSONObject json = new JSONObject(response);
+
+					if (handler != null)
+						handler.onResponse(json);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+			@Override
+			public void onFinish() {
+
+			}
+
+			@Override
+			public void onCancelled() {
+
+			}
+
+		});
+	}
 }

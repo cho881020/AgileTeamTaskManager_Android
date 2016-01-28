@@ -6,6 +6,11 @@
     android:orientation="vertical"
     tools:context="kr.co.kj_studio.agileteamtaskmanager.EditTaskActivity">
 
+    <EditText
+        android:id="@+id/todoContentEdt"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:padding="5dp"/>
 
 
 </LinearLayout>
